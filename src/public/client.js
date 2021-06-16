@@ -5,7 +5,7 @@ let store = {
 }
 
 // add our markup to the page
-const root = document.getElementById('root')
+const root = document.getElementById('root');
 
 const updateStore = (store, newState) => {
     store = Object.assign(store, newState)
@@ -16,13 +16,30 @@ const render = async (root, state) => {
     root.innerHTML = App(state)
 }
 
+const updateData = (rover_name) => {
+  console.log(rover_name);
+}
+
 
 // create content
 const App = (state) => {
     let { rovers, apod } = state
 
     return `
-        <header></header>
+        <header>
+          <div class="rover_tile" onclick="updateData('Curiosity')">
+            <img src="assets/images/Curiosity.jpg" height="100">
+            <div>Curiosity</div>
+          </div>
+          <div class="rover_tile" onclick="updateData('Opportunity')">
+            <img src="assets/images/Opportunity.jpg" height="100">
+            <div>Opportunity</div>
+          </div>
+          <div class="rover_tile" onclick="updateData('Spirit')">
+            <img src="assets/images/Spirit.jpg" height="100">
+            <div>Spirit</div>
+          </div>
+        </header>
         <main>
             ${Greeting(store.user.name)}
             <section>
@@ -49,7 +66,6 @@ window.addEventListener('load', () => {
 })
 
 // ------------------------------------------------------  COMPONENTS
-
 // Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
 const Greeting = (name) => {
     if (name) {
@@ -69,12 +85,14 @@ const ImageOfTheDay = (apod) => {
     // If image does not already exist, or it is not from today -- request it again
     const today = new Date()
     const photodate = new Date(apod.date)
-    console.log(photodate.getDate(), today.getDate());
 
+    console.log(photodate.getDate(), today.getDate());
     console.log(photodate.getDate() === today.getDate());
+
     if (!apod || apod.date === today.getDate() ) {
         getImageOfTheDay(store)
     }
+    console.log(apod.image.date);
 
     // check if the photo of the day is actually type video!
     if (apod.media_type === "video") {
