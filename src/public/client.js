@@ -2,6 +2,7 @@ let store = {
     user: { name: "Student" },
     apod: '',
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
+    active_rover: '',
 }
 
 // add our markup to the page
@@ -23,13 +24,14 @@ const updateData = (rover_name) => {
 
 // create content
 const App = (state) => {
-    let { rovers, apod } = state
+    let { rovers, apod, active_rover } = state;
+
     return `
         <header>
           ${Header(rovers)}
         </header>
         <main>
-          ${Main(apod)}
+           ${Main(apod)}
         </main>
         <footer>${Footer()}</footer>
     `
@@ -130,11 +132,10 @@ const ImageOfTheDay = (apod) => {
 
 // Example API call
 const getImageOfTheDay = (state) => {
-    let { apod } = state
-
+    let { apod } = state;
     fetch(`http://localhost:3000/apod`)
         .then(res => res.json())
-        .then(apod => updateStore(store, { apod }))
+        .then(apod => updateStore(store, { apod }));
 
-    return data
+    return data;
 }
