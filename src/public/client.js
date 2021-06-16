@@ -24,7 +24,6 @@ const updateData = (rover_name) => {
 // create content
 const App = (state) => {
     let { rovers, apod } = state
-
     return `
         ${Header(rovers)}
         <main>
@@ -52,7 +51,7 @@ window.addEventListener('load', () => {
     render(root, store)
 })
 
-// ------------------------------------------------------  COMPONENTS
+// ---------------------  COMPONENTS ------------------------- //
 const Header = (rovers) => {
   return `
       <header>
