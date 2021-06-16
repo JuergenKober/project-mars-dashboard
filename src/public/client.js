@@ -8,13 +8,25 @@ let store = {
 // add our markup to the page
 const root = document.getElementById('root');
 
+root.addEventListener("click", function(e) {
+	// e.target is the clicked element!
+	// If it was a list item
+	if(e.target && e.target.nodeName == "LI") {
+		// List item found!  Output the ID!
+		console.log("List item ", e.target.id.replace("post-", ""), " was clicked!");
+	}
+  if (e.target && e.target.matches("div.rover_tile img")) {
+    console.log("Rover tile element clicked!");
+  }
+});
+
 const updateStore = (store, newState) => {
     store = Object.assign(store, newState)
     render(root, store)
 }
 
 const render = async (root, state) => {
-    root.innerHTML = App(state)
+    root.innerHTML = App(state);
 }
 
 const updateData = (rover_name) => {
@@ -28,7 +40,8 @@ const App = (state) => {
 
     return `
         <header>
-          ${Header(rovers)}
+          ${'active_rover: ', active_rover}
+          ${Header(state)}
         </header>
         <main>
            ${Main(apod)}
@@ -41,6 +54,11 @@ const App = (state) => {
 window.addEventListener('load', () => {
     render(root, store)
 })
+
+
+
+
+
 
 // ---------------------  COMPONENTS ------------------------- //
 const Main = (apod) => {
@@ -62,17 +80,19 @@ const Main = (apod) => {
   `
 }
 
-const Header = (rovers) => {
+const Header = (state) => {
+  let { rovers, active_rover } = state;
+
   return `
-        <div class="rover_tile" onclick="updateData('Curiosity')">
+        <div class="rover_tile">
           <img src="assets/images/Curiosity.jpg" height="100">
-          <div>Curiosity</div>
+          Curiosity
         </div>
-        <div class="rover_tile" onclick="updateData('Opportunity')">
+        <div class="rover_tile">
           <img src="assets/images/Opportunity.jpg" height="100">
-          <div>Opportunity</div>
+          Opportunity
         </div>
-        <div class="rover_tile" onclick="updateData('Spirit')">
+        <div class="rover_tile">
           <img src="assets/images/Spirit.jpg" height="100">
           <div>Spirit</div>
         </div>
@@ -101,14 +121,19 @@ const Greeting = (name) => {
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {
 
-    // If image does not already exist, or it is not from today -- request it again
+    // If image does not already exist, or it is not from today
+    // request it again
     const today = new Date()
     const photodate = new Date(apod.date)
+    if (apod) {
 
+      console.log('HAS IMAGE');
+    }
     console.log(photodate.getDate(), today.getDate());
     console.log(photodate.getDate() === today.getDate());
 
     if (!apod || apod.date === today.getDate() ) {
+        console.log('GET IMAGE');
         getImageOfTheDay(store)
     }
     console.log(apod.image.date);
