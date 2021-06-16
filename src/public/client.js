@@ -26,20 +26,7 @@ const App = (state) => {
     let { rovers, apod } = state
 
     return `
-        <header>
-          <div class="rover_tile" onclick="updateData('Curiosity')">
-            <img src="assets/images/Curiosity.jpg" height="100">
-            <div>Curiosity</div>
-          </div>
-          <div class="rover_tile" onclick="updateData('Opportunity')">
-            <img src="assets/images/Opportunity.jpg" height="100">
-            <div>Opportunity</div>
-          </div>
-          <div class="rover_tile" onclick="updateData('Spirit')">
-            <img src="assets/images/Spirit.jpg" height="100">
-            <div>Spirit</div>
-          </div>
-        </header>
+        ${Header(rovers)}
         <main>
             ${Greeting(store.user.name)}
             <section>
@@ -56,7 +43,7 @@ const App = (state) => {
                 ${ImageOfTheDay(apod)}
             </section>
         </main>
-        <footer></footer>
+        ${Footer()}
     `
 }
 
@@ -66,6 +53,32 @@ window.addEventListener('load', () => {
 })
 
 // ------------------------------------------------------  COMPONENTS
+const Header = (rovers) => {
+  return `
+      <header>
+        <div class="rover_tile" onclick="updateData('Curiosity')">
+          <img src="assets/images/Curiosity.jpg" height="100">
+          <div>Curiosity</div>
+        </div>
+        <div class="rover_tile" onclick="updateData('Opportunity')">
+          <img src="assets/images/Opportunity.jpg" height="100">
+          <div>Opportunity</div>
+        </div>
+        <div class="rover_tile" onclick="updateData('Spirit')">
+          <img src="assets/images/Spirit.jpg" height="100">
+          <div>Spirit</div>
+        </div>
+      </header>
+    `
+}
+
+const Footer = () => {
+  return `
+    <footer>Footer</footer>
+  `
+}
+
+
 // Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
 const Greeting = (name) => {
     if (name) {
