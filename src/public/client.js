@@ -9,14 +9,12 @@ let store = {
 const root = document.getElementById('root');
 
 root.addEventListener("click", function(e) {
-	// e.target is the clicked element!
-	// If it was a list item
-	if(e.target && e.target.nodeName == "LI") {
-		// List item found!  Output the ID!
-		console.log("List item ", e.target.id.replace("post-", ""), " was clicked!");
-	}
-  if (e.target && e.target.matches("div.rover_tile img")) {
-    console.log("Rover tile element clicked!");
+	// e.target is the clicked element
+  if (e.target && e.target.matches("div.rover_tile")) {
+    updateStore(store, {active_rover: e.target.id});
+  }
+  else if (e.target && e.target.matches("div.rover_tile img")) {
+    updateStore(store, {active_rover: e.target.parentElement.id});
   }
 });
 
@@ -29,18 +27,12 @@ const render = async (root, state) => {
     root.innerHTML = App(state);
 }
 
-const updateData = (rover_name) => {
-  console.log(rover_name);
-}
-
-
 // create content
 const App = (state) => {
     let { rovers, apod, active_rover } = state;
 
     return `
         <header>
-          ${'active_rover: ', active_rover}
           ${Header(state)}
         </header>
         <main>
@@ -54,11 +46,6 @@ const App = (state) => {
 window.addEventListener('load', () => {
     render(root, store)
 })
-
-
-
-
-
 
 // ---------------------  COMPONENTS ------------------------- //
 const Main = (apod) => {
@@ -84,17 +71,18 @@ const Header = (state) => {
   let { rovers, active_rover } = state;
 
   return `
-        <div class="rover_tile">
+        <div class="rover_tile" id="Curiosity">
+          active rover: ${active_rover}
           <img src="assets/images/Curiosity.jpg" height="100">
           Curiosity
         </div>
-        <div class="rover_tile">
+        <div class="rover_tile" id="Opportunity">
           <img src="assets/images/Opportunity.jpg" height="100">
           Opportunity
         </div>
-        <div class="rover_tile">
+        <div class="rover_tile" id="Spirit">
           <img src="assets/images/Spirit.jpg" height="100">
-          <div>Spirit</div>
+          Spirit
         </div>
     `
 }
