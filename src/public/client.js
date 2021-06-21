@@ -161,8 +161,6 @@ const getImageOfTheDay = (state) => {
     fetch(`http://localhost:3000/apod`)
         .then(res => res.json())
         .then(apod => updateStore(store, { apod }));
-
-    return data;
 }
 
 const getRoverManifest = (active_rover) => {
