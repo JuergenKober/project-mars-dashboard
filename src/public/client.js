@@ -11,9 +11,11 @@ const root = document.getElementById('root');
 root.addEventListener("click", function(e) {
 	// e.target is the clicked element
   if (e.target && e.target.matches("div.rover_tile")) {
+    getRoverManifest(e.target.id);
     updateStore(store, {active_rover: e.target.id});
   }
   else if (e.target && e.target.matches("div.rover_tile img")) {
+    getRoverManifest(e.target.parentElement.id);
     updateStore(store, {active_rover: e.target.parentElement.id});
   }
 });
@@ -30,13 +32,12 @@ const render = async (root, state) => {
 // create content
 const App = (state) => {
     let { rovers, apod, active_rover } = state;
-
     return `
         <header>
           ${Header(state)}
         </header>
         <main>
-           ${Main(apod)}
+           ${Main(apod, active_rover)}
         </main>
         <footer>${Footer()}</footer>
     `
@@ -48,23 +49,34 @@ window.addEventListener('load', () => {
 })
 
 // ---------------------  COMPONENTS ------------------------- //
-const Main = (apod) => {
-  return `
-    ${Greeting(store.user.name)}
-    <section>
-        <h3>Put things on the page!</h3>
-        <p>Here is an example section.</p>
-        <p>
-            One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
-            the most popular websites across all federal agencies. It has the popular appeal of a Justin Bieber video.
-            This endpoint structures the APOD imagery and associated metadata so that it can be repurposed for other
-            applications. In addition, if the concept_tags parameter is set to True, then keywords derived from the image
-            explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
-            but generally help with discoverability of relevant imagery.
-        </p>
-        ${ImageOfTheDay(apod)}
-    </section>
-  `
+const Main = (apod, active_rover) => {
+
+  console.log('apod from main', apod);
+
+  if (active_rover === '') {
+    return `
+      ${Greeting(store.user.name)}
+      <section>
+          <h3>Put things on the page!</h3>
+          <p>Here is an example section.</p>
+          <p>
+              One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
+              the most popular websites across all federal agencies. It has the popular appeal of a Justin Bieber video.
+              This endpoint structures the APOD imagery and associated metadata so that it can be repurposed for other
+              applications. In addition, if the concept_tags parameter is set to True, then keywords derived from the image
+              explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
+              but generally help with discoverability of relevant imagery.
+          </p>
+          ${ImageOfTheDay(apod)}
+      </section>
+    `
+  } else {
+    return `
+      <section>
+          <h3>Data for ${active_rover}</h3>
+      </section>
+    `
+  }
 }
 
 const Header = (state) => {
@@ -153,8 +165,7 @@ const getImageOfTheDay = (state) => {
     return data;
 }
 
-const getRoverManifest = (state) => {
-    let { apod, active_rover } = state;
+const getRoverManifest = (active_rover) => {
     fetch(`http://localhost:3000/manifest/${active_rover}`)
         .then(res => res.json())
         .then(apod => updateStore(store, { apod }));
