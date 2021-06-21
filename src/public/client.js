@@ -51,7 +51,6 @@ window.addEventListener('load', () => {
 // ---------------------  COMPONENTS ------------------------- //
 const Main = (apod, active_rover) => {
 
-  console.log('apod from main', apod);
 
   if (active_rover === '') {
     return `
@@ -71,11 +70,24 @@ const Main = (apod, active_rover) => {
       </section>
     `
   } else {
-    return `
-      <section>
-          <h3>Data for ${active_rover}</h3>
-      </section>
-    `
+    if (apod.manifest) {
+      const rover_data = apod.manifest.photo_manifest;
+      const most_recent_photos = getMostRecentPhotos(rover_data.photos);
+
+
+
+      return `
+        <section>
+            <h3>Data for ${active_rover}</h3>
+            <p>Name: ${rover_data.name}</p>
+            <p>Status: ${rover_data.status}</p>
+            <p>Landing date: ${rover_data.landing_date}</p>
+            <p>Launch date: ${rover_data.launch_date}</p>
+            <p>Name: ${rover_data.name}</p>
+            <p>Last photo taken: ${getLastPhotoTaken(rover_data.photos)}</p>
+        </section>
+      `
+    }
   }
 }
 
@@ -104,6 +116,31 @@ const Footer = () => {
     Footer Component
   `
 }
+
+const getLastPhotoTaken = (photos) => {
+  return photos.splice([photos.length-1])[0].earth_date;
+}
+
+const getMostRecentPhotos = (photos) => {
+  /***
+  const sorter = (a, b) => {
+   return a.earth_date - b.earth_date;
+  };
+  const sortByEarthDate = photos => {
+    photos.sort(sorter);
+  };
+  sortByEarthDate(photos);
+
+  console.log('last one');
+  console.log(photos.splice([photos.length-1]));
+
+  console.log('last 5 images');
+  console.log(photos.slice(1).slice(-5))
+  ***/
+  //console.log(photos.slice(Math.max(photos.length - 5, 1)));
+
+}
+
 
 // Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
 const Greeting = (name) => {
