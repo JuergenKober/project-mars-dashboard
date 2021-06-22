@@ -11,12 +11,12 @@ const root = document.getElementById('root');
 root.addEventListener("click", function(e) {
 	// e.target is the clicked element
   if (e.target && e.target.matches("div.rover_tile")) {
-    getRoverManifest(e.target.id);
-    updateStore(store, {active_rover: e.target.id});
+    getRoverData(e.target.id);
+    //updateStore(store, {active_rover: e.target.id});
   }
   else if (e.target && e.target.matches("div.rover_tile img")) {
-    getRoverManifest(e.target.parentElement.id);
-    updateStore(store, {active_rover: e.target.parentElement.id});
+    getRoverData(e.target.parentElement.id);
+    //updateStore(store, {active_rover: e.target.parentElement.id});
   }
 });
 
@@ -200,8 +200,19 @@ const getImageOfTheDay = (state) => {
         .then(apod => updateStore(store, { apod }));
 }
 
-const getRoverManifest = (active_rover) => {
-    fetch(`http://localhost:3000/manifest/${active_rover}`)
-        .then(res => res.json())
-        .then(apod => updateStore(store, { apod }));
+const getRoverData = async (active_rover) => {
+  const json = await getRoverManifestData(active_rover);
+  console.log('json 2', json);
+  updateStore(store, { active_rover: active_rover, apod: json });
+}
+
+const getRoverManifestData = async (active_rover) => {
+    const response = await fetch(`http://localhost:3000/manifest/${active_rover}`, {});
+    const json = await response.json();
+    console.log('json 1', json);
+    return json;
+}
+
+const getRoverImages = (rover_name, earth_date) => {
+
 }
