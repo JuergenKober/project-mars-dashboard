@@ -3,6 +3,7 @@ let store = {
     apod: '',
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
     active_rover: '',
+    rover_manifest: '',
 }
 
 // add our markup to the page
@@ -72,9 +73,6 @@ const Main = (apod, active_rover) => {
   } else {
     if (apod.manifest) {
       const rover_data = apod.manifest.photo_manifest;
-      const most_recent_photos = getMostRecentPhotos(rover_data.photos);
-
-
 
       return `
         <section>
@@ -120,27 +118,6 @@ const Footer = () => {
 const getLastPhotoTaken = (photos) => {
   return photos.splice([photos.length-1])[0].earth_date;
 }
-
-const getMostRecentPhotos = (photos) => {
-  /***
-  const sorter = (a, b) => {
-   return a.earth_date - b.earth_date;
-  };
-  const sortByEarthDate = photos => {
-    photos.sort(sorter);
-  };
-  sortByEarthDate(photos);
-
-  console.log('last one');
-  console.log(photos.splice([photos.length-1]));
-
-  console.log('last 5 images');
-  console.log(photos.slice(1).slice(-5))
-  ***/
-  //console.log(photos.slice(Math.max(photos.length - 5, 1)));
-
-}
-
 
 // Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
 const Greeting = (name) => {
@@ -203,7 +180,11 @@ const getImageOfTheDay = (state) => {
 const getRoverData = async (active_rover) => {
   const json = await getRoverManifestData(active_rover);
   console.log('json 2', json);
-  updateStore(store, { active_rover: active_rover, apod: json });
+  updateStore(store, {
+    active_rover: active_rover,
+    apod: json,
+    rover_manifest: json
+  });
 }
 
 const getRoverManifestData = async (active_rover) => {
