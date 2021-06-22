@@ -4,6 +4,7 @@ let store = {
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
     active_rover: '',
     rover_manifest: '',
+    rover_images: '',
 }
 
 // add our markup to the page
@@ -12,11 +13,11 @@ const root = document.getElementById('root');
 root.addEventListener("click", function(e) {
 	// e.target is the clicked element
   if (e.target && e.target.matches("div.rover_tile")) {
-    getRoverData(e.target.id);
+    getRoverData(e.target.id, store);
     //updateStore(store, {active_rover: e.target.id});
   }
   else if (e.target && e.target.matches("div.rover_tile img")) {
-    getRoverData(e.target.parentElement.id);
+    getRoverData(e.target.parentElement.id, store);
     //updateStore(store, {active_rover: e.target.parentElement.id});
   }
 });
@@ -52,7 +53,7 @@ window.addEventListener('load', () => {
 // ---------------------  COMPONENTS ------------------------- //
 const Main = (state) => {
 
-  const { apod, active_rover, rover_manifest } = state;
+  const { apod, active_rover, rover_manifest, rover_images } = state;
 
   if (active_rover === '') {
     return `
@@ -73,7 +74,9 @@ const Main = (state) => {
     `
   } else if (rover_manifest !== '') {
       const rover_data = rover_manifest.manifest.photo_manifest;
-      console.log('rover_manifest from main', rover_manifest)
+      console.log('rover_manifest from main', rover_manifest);
+      console.log('rover_images from main', rover_images);
+
       return `
         <section>
             <h3>Data for ${active_rover}</h3>
@@ -112,10 +115,6 @@ const Footer = () => {
   return `
     <i>All data retrieved from the the NASA API portal. This website is one of the most popular websites across all federal agencies. The objective of this site is to make NASA data, including imagery, eminently accessible to application developers. The api.nasa.gov catalog is growing. The full documentation for this API can be found in the <a href="https://github.com/nasa/apod-api">APOD API Github repository</a></i>.
   `
-}
-
-const getLastPhotoTaken = (photos) => {
-  return photos.splice([photos.length-1])[0].earth_date;
 }
 
 // Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
@@ -166,7 +165,7 @@ const ImageOfTheDay = (apod) => {
     }
 }
 
-// ------------------------------------------------------  API CALLS
+// -----------------  API CALLS ---------------------------------/
 
 // Example API call
 const getImageOfTheDay = (state) => {
@@ -176,23 +175,37 @@ const getImageOfTheDay = (state) => {
         .then(apod => updateStore(store, { apod }));
 }
 
-const getRoverData = async (active_rover) => {
-  const json = await getRoverManifestData(active_rover);
-  console.log('json 2', json);
-  updateStore(store, {
+const getRoverData = async (active_rover, state) => {
+  const manifest = await getRoverManifestData(active_rover);
+  console.log('manifest 2', manifest);
+  const earth_date = getLastPhotoTaken(manifest.manifest.photo_manifest.photos);
+  const images = await getRoverImages(active_rover, earth_date);
+
+  updateStore(state, {
     active_rover: active_rover,
-    apod: json,
-    rover_manifest: json
+    apod: manifest,
+    rover_manifest: manifest,
+    rover_images: images
   });
 }
 
 const getRoverManifestData = async (active_rover) => {
     const response = await fetch(`http://localhost:3000/manifest/${active_rover}`, {});
-    const json = await response.json();
-    console.log('json 1', json);
-    return json;
+    const manifest = await response.json();
+    console.log('manifest 1', manifest);
+    return manifest;
 }
 
-const getRoverImages = (rover_name, earth_date) => {
+const getRoverImages = async (rover_name, earth_date) => {
+  const response = await fetch(`http://localhost:3000/rover_photos/${rover_name}/${earth_date}`, {});
+  const images = await response.json();
+  console.log('images 1', images);
+  return images;
+}
 
+// -----------------  MOTHER'S LITTLE HELPERS ------------------------/
+
+
+const getLastPhotoTaken = (photos) => {
+  return photos.splice([photos.length-1])[0].earth_date;
 }
