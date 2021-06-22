@@ -71,9 +71,8 @@ const Main = (state) => {
           ${ImageOfTheDay(apod)}
       </section>
     `
-  } else {
-    if (apod.manifest) {
-      const rover_data = apod.manifest.photo_manifest;
+  } else if (rover_manifest !== '') {
+      const rover_data = rover_manifest.manifest.photo_manifest;
       console.log('rover_manifest from main', rover_manifest)
       return `
         <section>
@@ -86,7 +85,6 @@ const Main = (state) => {
             <p>Last photo taken: ${getLastPhotoTaken(rover_data.photos)}</p>
         </section>
       `
-    }
   }
 }
 
