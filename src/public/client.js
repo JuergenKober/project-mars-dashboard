@@ -38,7 +38,7 @@ const App = (state) => {
           ${Header(state)}
         </header>
         <main>
-           ${Main(apod, active_rover)}
+           ${Main(state)}
         </main>
         <footer>${Footer()}</footer>
     `
@@ -50,8 +50,9 @@ window.addEventListener('load', () => {
 })
 
 // ---------------------  COMPONENTS ------------------------- //
-const Main = (apod, active_rover) => {
+const Main = (state) => {
 
+  const { apod, active_rover, rover_manifest } = state;
 
   if (active_rover === '') {
     return `
@@ -73,7 +74,7 @@ const Main = (apod, active_rover) => {
   } else {
     if (apod.manifest) {
       const rover_data = apod.manifest.photo_manifest;
-
+      console.log('rover_manifest from main', rover_manifest)
       return `
         <section>
             <h3>Data for ${active_rover}</h3>
@@ -111,7 +112,7 @@ const Header = (state) => {
 
 const Footer = () => {
   return `
-    Footer Component
+    <i>All data retrieved from the the NASA API portal. This website is one of the most popular websites across all federal agencies. The objective of this site is to make NASA data, including imagery, eminently accessible to application developers. The api.nasa.gov catalog is growing. The full documentation for this API can be found in the <a href="https://github.com/nasa/apod-api">APOD API Github repository</a></i>.
   `
 }
 
