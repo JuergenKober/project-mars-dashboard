@@ -23,8 +23,8 @@ root.addEventListener("click", function(e) {
 });
 
 const updateStore = (store, newState) => {
-    store = Object.assign(store, newState)
-    render(root, store)
+    store = Object.assign(store, newState);
+    render(root, store);
 }
 
 const render = async (root, state) => {
@@ -41,7 +41,9 @@ const App = (state) => {
         <main>
            ${Main(state)}
         </main>
-        <footer>${Footer()}</footer>
+        <footer>
+          ${Footer()}
+        </footer>
     `
 }
 
@@ -50,14 +52,16 @@ window.addEventListener('load', () => {
     render(root, store)
 })
 
-// ---------------------  COMPONENTS ------------------------- //
+/*****************************************************************
+*** components to be displayed in the browser
+*****************************************************************/
 const Main = (state) => {
 
-  const { apod, active_rover, rover_manifest, rover_images } = state;
+  const { user, apod, active_rover, rover_manifest, rover_images } = state;
 
   if (active_rover === '') {
     return `
-      ${Greeting(store.user.name)}
+      ${Greeting(user.name)}
       <section>
           <h3>Put things on the page!</h3>
           <p>Here is an example section.</p>
@@ -69,7 +73,7 @@ const Main = (state) => {
               explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
               but generally help with discoverability of relevant imagery.
           </p>
-          ${ImageOfTheDay(apod)}
+          ${ImageOfTheDay(state)}
       </section>
     `
   } else if (rover_manifest !== '') {
@@ -111,17 +115,19 @@ const Footer = () => {
   `
 }
 
-// Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
+/*****************************************************************
+*** Example of a pure function that renders infomation
+*** example from starter code
+*****************************************************************/
 const Greeting = (name) => {
-    if (name) {
-        return `
-            <h1>Welcome, ${name}!</h1>
-        `
-    }
-
+  if (name) {
     return `
-        <h1>Hello!</h1>
+      <h1>Welcome, ${name}!</h1>
     `
+  }
+  return `
+    <h1>Hello!</h1>
+  `
 }
 
 /*****************************************************************
@@ -129,38 +135,33 @@ const Greeting = (name) => {
 *** requested from the backend
 *** came with starter code
 *****************************************************************/
-const ImageOfTheDay = (apod) => {
-
+const ImageOfTheDay = (state) => {
+    const { apod } = state;
     // If image does not already exist, or it is not from today
     // request it again
-    const today = new Date()
-    const photodate = new Date(apod.date)
     if (apod) {
-
-      console.log('HAS IMAGE');
+      const today = new Date()
+      const photodate = new Date(apod.date)
+      if (apod.date === today.getDate() ) {
+          getImageOfTheDay(state)
+      }
+      // check if the photo of the day is actually type video!
+      if (apod.media_type === "video") {
+          return (`
+              <p>See today's featured video <a href="${apod.url}">here</a></p>
+              <p>${apod.title}</p>
+              <p>${apod.explanation}</p>
+          `)
+      } else {
+          return (`
+              <img src="${apod.image.url}" height="350px" width="100%" />
+              <p>${apod.image.explanation}</p>
+          `)
+      }
     }
-    console.log(photodate.getDate(), today.getDate());
-    console.log(photodate.getDate() === today.getDate());
-
-    if (!apod || apod.date === today.getDate() ) {
-        console.log('GET IMAGE');
-        getImageOfTheDay(store)
-    }
-    console.log(apod.image.date);
-
-    // check if the photo of the day is actually type video!
-    if (apod.media_type === "video") {
-        return (`
-            <p>See today's featured video <a href="${apod.url}">here</a></p>
-            <p>${apod.title}</p>
-            <p>${apod.explanation}</p>
-        `)
-    } else {
-        return (`
-            <img src="${apod.image.url}" height="350px" width="100%" />
-            <p>${apod.image.explanation}</p>
-        `)
-    }
+    return (`
+        <p>Sorry, we couldn't get any data today !</p>
+    `)
 }
 
 /*****************************************************************
