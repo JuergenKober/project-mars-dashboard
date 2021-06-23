@@ -7,6 +7,22 @@ let store = {
     rover_images: '',
 }
 
+let storeIM = Immutable.Map({
+    user: Immutable.Map({
+        name: 'connoisseur of the multiverse',
+    }),
+    apod: '',
+    rovers: ['Curiosity', 'Opportunity', 'Spirit'],
+    active_rover: '',
+    rover_manifest: '',
+    rover_images: '',
+})
+
+function updateStoreIM(state, newState) {
+    store = state.merge(newState);
+    render(root, store);
+}
+
 // add our markup to the page
 const root = document.getElementById('root');
 
@@ -56,9 +72,7 @@ window.addEventListener('load', () => {
 *** components to be displayed in the browser
 *****************************************************************/
 const Main = (state) => {
-
   const { user, apod, active_rover, rover_manifest, rover_images } = state;
-
   if (active_rover === '') {
     return `
       ${Greeting(user.name)}
