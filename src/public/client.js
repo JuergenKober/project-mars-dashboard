@@ -93,22 +93,16 @@ const Main = (state) => {
 
 const Header = (state) => {
   let { rovers, active_rover } = state;
-
-  return `
-        <div class="rover_tile" id="Curiosity">
-          active rover: ${active_rover}
-          <img src="assets/images/Curiosity.jpg" height="100">
-          Curiosity
-        </div>
-        <div class="rover_tile" id="Opportunity">
-          <img src="assets/images/Opportunity.jpg" height="100">
-          Opportunity
-        </div>
-        <div class="rover_tile" id="Spirit">
-          <img src="assets/images/Spirit.jpg" height="100">
-          Spirit
-        </div>
+  let rover_element = '';
+  rovers.forEach((item, i) => {
+    rover_element += `
+      <div class="rover_tile" id="${item}">
+        <img src="assets/images/${item}.jpg" height="100">
+        ${item}
+      </div>
     `
+  });
+  return rover_element;
 }
 
 const Footer = () => {
