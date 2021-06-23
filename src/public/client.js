@@ -130,7 +130,11 @@ const Greeting = (name) => {
     `
 }
 
-// Example of a pure function that renders infomation requested from the backend
+/*****************************************************************
+*** Example of a pure function that renders infomation
+*** requested from the backend
+*** came with starter code
+*****************************************************************/
 const ImageOfTheDay = (apod) => {
 
     // If image does not already exist, or it is not from today
@@ -165,16 +169,23 @@ const ImageOfTheDay = (apod) => {
     }
 }
 
-// -----------------  API CALLS ---------------------------------/
-
-// Example API call
+/*****************************************************************
+*** API calls
+*****************************************************************/
+/*****************************************************************
+*** Example API call to get image of the day
+*****************************************************************/
 const getImageOfTheDay = (state) => {
     let { apod } = state;
     fetch(`http://localhost:3000/apod`)
         .then(res => res.json())
-        .then(apod => updateStore(store, { apod }));
+        .then(apod => updateStore(state, { apod }));
 }
 
+/*****************************************************************
+*** API call to get all data for a given rover and store it
+*** in the store of the app
+*****************************************************************/
 const getRoverData = async (active_rover, state) => {
   const manifest = await getRoverManifestData(active_rover);
   console.log('manifest 2', manifest);
@@ -189,6 +200,9 @@ const getRoverData = async (active_rover, state) => {
   });
 }
 
+/*****************************************************************
+*** API call to get the data of the manifest for a given rover
+*****************************************************************/
 const getRoverManifestData = async (active_rover) => {
     const response = await fetch(`http://localhost:3000/manifest/${active_rover}`, {});
     const manifest = await response.json();
@@ -196,6 +210,9 @@ const getRoverManifestData = async (active_rover) => {
     return manifest;
 }
 
+/*****************************************************************
+*** API call to get the data of the images for a given rover
+*****************************************************************/
 const getRoverImages = async (rover_name, earth_date) => {
   const response = await fetch(`http://localhost:3000/rover_photos/${rover_name}/${earth_date}`, {});
   const images = await response.json();
@@ -203,9 +220,9 @@ const getRoverImages = async (rover_name, earth_date) => {
   return images;
 }
 
-// -----------------  MOTHER'S LITTLE HELPERS ------------------------/
-
-
+/*****************************************************************
+*** mother's little helpers
+*****************************************************************/
 const getLastPhotoTaken = (photos) => {
   return photos.splice([photos.length-1])[0].earth_date;
 }
