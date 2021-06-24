@@ -33,7 +33,6 @@ app.get('/rover_photos/:rover_name/:earth_date', async (req, res) => {
 // example API call http://localhost:3000/manifest/Curiosity
 app.get('/manifest/:rover_name', async (req, res) => {
     try {
-        console.log('rover_name:', req.params.rover);
         let manifest = await fetch(`https://api.nasa.gov/mars-photos/api/v1/manifests/${req.params.rover_name}/?api_key=${process.env.API_KEY}`)
             .then(res => res.json());
         res.send({ manifest });
@@ -47,7 +46,6 @@ app.get('/apod', async (req, res) => {
     try {
         let image = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${process.env.API_KEY}`)
             .then(res => res.json());
-        console.log('image from /apod');
         res.send({ image });
     } catch (err) {
         console.log('error:', err);
