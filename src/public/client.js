@@ -1,12 +1,3 @@
-let store = {
-    user: { name: "Student" },
-    apod: '',
-    rovers: ['Curiosity', 'Opportunity', 'Spirit'],
-    active_rover: '',
-    rover_manifest: '',
-    rover_images: '',
-}
-
 let storeIM = Immutable.Map({
     user: Immutable.Map({
         name: 'connoisseur of the multiverse',
@@ -19,8 +10,8 @@ let storeIM = Immutable.Map({
 })
 
 function updateStoreIM(state, newState) {
-    store = state.merge(newState);
-    render(root, store);
+    storeIM = state.merge(newState);
+    render(root, storeIM);
 }
 
 // add our markup to the page
@@ -29,19 +20,14 @@ const root = document.getElementById('root');
 root.addEventListener("click", function(e) {
 	// e.target is the clicked element
   if (e.target && e.target.matches("div.rover_tile")) {
-    getRoverData(e.target.id, store);
-    //updateStore(store, {active_rover: e.target.id});
+    getRoverData(e.target.id, storeIM);
+    //updateStoreIM(storeIM, {active_rover: e.target.id});
   }
   else if (e.target && e.target.matches("div.rover_tile img")) {
-    getRoverData(e.target.parentElement.id, store);
-    //updateStore(store, {active_rover: e.target.parentElement.id});
+    getRoverData(e.target.parentElement.id, storeIM);
+    //updateStoreIM(storeIM, {active_rover: e.target.parentElement.id});
   }
 });
-
-const updateStore = (store, newState) => {
-    store = Object.assign(store, newState);
-    render(root, store);
-}
 
 const render = async (root, state) => {
     root.innerHTML = App(state);
@@ -49,7 +35,7 @@ const render = async (root, state) => {
 
 // create content
 const App = (state) => {
-    let { rovers, apod, active_rover } = state;
+    let { rovers, apod, active_rover } = state.toJS();
     return `
         <header>
           ${Header(state)}
@@ -65,14 +51,14 @@ const App = (state) => {
 
 // listening for load event because page should load before any JS is called
 window.addEventListener('load', () => {
-    render(root, store)
+    render(root, storeIM)
 })
 
 /*****************************************************************
 *** components to be displayed in the browser
 *****************************************************************/
 const Main = (state) => {
-  const { user, apod, active_rover, rover_manifest, rover_images } = state;
+  const { user, apod, active_rover, rover_manifest, rover_images } = state.toJS();
   if (active_rover === '') {
     return `
       ${Greeting(user.name)}
@@ -110,7 +96,7 @@ const Main = (state) => {
 }
 
 const Header = (state) => {
-  let { rovers, active_rover } = state;
+  let { rovers, active_rover } = state.toJS();
   let rover_element = '';
   rovers.forEach((item, i) => {
     rover_element += `
@@ -150,7 +136,7 @@ const Greeting = (name) => {
 *** came with starter code
 *****************************************************************/
 const ImageOfTheDay = (state) => {
-    const { apod } = state;
+    const { apod } = state.toJS();
     // If image does not already exist, or it is not from today
     // request it again
     if (apod) {
@@ -185,15 +171,15 @@ const ImageOfTheDay = (state) => {
 *** Example API call to get image of the day
 *****************************************************************/
 const getImageOfTheDay = (state) => {
-    let { apod } = state;
+    let { apod } = state.toJS();
     fetch(`http://localhost:3000/apod`)
         .then(res => res.json())
-        .then(apod => updateStore(state, { apod }));
+        .then(apod => updateStoreIM(state, { apod }));
 }
 
 /*****************************************************************
-*** API call to get all data for a given rover and store it
-*** in the store of the app
+*** API call to get all data for a given rover and storeIM it
+*** in the storeIM of the app
 *****************************************************************/
 const getRoverData = async (active_rover, state) => {
   const manifest = await getRoverManifestData(active_rover);
@@ -201,7 +187,7 @@ const getRoverData = async (active_rover, state) => {
   const earth_date = getLastPhotoTaken(manifest.manifest.photo_manifest.photos);
   const images = await getRoverImages(active_rover, earth_date);
 
-  updateStore(state, {
+  updateStoreIM(state, {
     active_rover: active_rover,
     apod: manifest,
     rover_manifest: manifest,
