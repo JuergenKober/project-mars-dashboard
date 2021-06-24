@@ -60,6 +60,9 @@ window.addEventListener('load', () => {
 const Main = (state) => {
   const { user, apod, active_rover, rover_manifest, rover_images } = state.toJS();
   if (active_rover === '') {
+    if (apod === '') {
+      getImageOfTheDay(state);
+    }
     return `
       ${Greeting(user.name)}
       <section>
@@ -98,15 +101,14 @@ const Main = (state) => {
 const Header = (state) => {
   let { rovers, active_rover } = state.toJS();
   let rover_element = '';
-  rovers.forEach((item, i) => {
-    rover_element += `
-      <div class="rover_tile" id="${item}">
+
+  const rover_elements = rovers.map(item => {
+    return (`<div class="rover_tile" id="${item}">
         <img src="assets/images/${item}.jpg" height="100">
         ${item}
-      </div>
-    `
+      </div>`);
   });
-  return rover_element;
+  return rover_elements.join('');
 }
 
 const Footer = () => {
