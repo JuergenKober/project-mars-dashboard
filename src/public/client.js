@@ -7,6 +7,7 @@ let storeIM = Immutable.Map({
     active_rover: '',
     rover_manifest: '',
     rover_images: '',
+    last_photo_taken: '',
 })
 
 function updateStoreIM(state, newState) {
@@ -30,18 +31,21 @@ root.addEventListener("click", function(e) {
 });
 
 const render = async (root, state) => {
-    root.innerHTML = App(state);
+    root.innerHTML = App(state, renderListElements, renderImageElements);
 }
 
 // create content
-const App = (state) => {
+const App = (state, renderList, renderImage) => {
     let { rovers, apod, active_rover } = state.toJS();
+
+    renderList('Name', 'John');
+
     return `
         <header>
           ${Header(state)}
         </header>
         <main>
-           ${Main(state)}
+           ${Main(state, renderList, renderImage)}
         </main>
         <footer>
           ${Footer()}
@@ -57,8 +61,16 @@ window.addEventListener('load', () => {
 /*****************************************************************
 *** components to be displayed in the browser
 *****************************************************************/
-const Main = (state) => {
-  const { user, apod, active_rover, rover_manifest, rover_images } = state.toJS();
+const Main = (state, renderListElements, renderImageElements) => {
+  const {
+    user,
+    apod,
+    active_rover,
+    rover_manifest,
+    rover_images,
+    last_photo_taken
+  } = state.toJS();
+
   if (active_rover === '') {
     if (apod === '') {
       getImageOfTheDay(state);
@@ -81,18 +93,32 @@ const Main = (state) => {
     `
   } else if (rover_manifest !== '') {
       const rover_data = rover_manifest.manifest.photo_manifest;
-      console.log('rover_manifest from main', rover_manifest);
+      const data_labels = ['Rover Name', 'Launch Date', 'Landing Date', 'Status', 'Date of most recent photos' ];
+      const data_items = [rover_data.name, rover_data.launch_date, rover_data.landing_date, rover_data.status, last_photo_taken ]
+      const photos = rover_images.rover_photos.photos;
+
+      //console.log('rover_manifest from main', rover_manifest);
       console.log('rover_images from main', rover_images);
+
+      const list_elements = data_labels.map((elem, i) => renderListElements(elem, data_items[i]));
+
+      // access each image element with rover_images.rover_photos.photos[i]
+      // image src: rover_images.rover_photos.photos[img_src]
+      console.log('rover_images.rover_photos.photos.length', rover_images.rover_photos.photos.length);
+      console.log('photos from main ', photos);
+
+      const image_elements = photos.map((elem, i) => renderImageElements(elem.img_src));
 
       return `
         <section>
             <h3>Data for ${active_rover}</h3>
-            <p>Name: ${rover_data.name}</p>
-            <p>Status: ${rover_data.status}</p>
-            <p>Landing date: ${rover_data.landing_date}</p>
-            <p>Launch date: ${rover_data.launch_date}</p>
-            <p>Name: ${rover_data.name}</p>
-            <p>Last photo taken: ${getLastPhotoTaken(rover_data.photos)}</p>
+            <ul>
+              ${list_elements.join('')}
+            </ul>
+            <div>
+              <div>Most recent photos taken on ${last_photo_taken}</div>
+              <div>${image_elements.join('')}</div>
+            </div>
         </section>
       `
   }
@@ -193,7 +219,8 @@ const getRoverData = async (active_rover, state) => {
     active_rover: active_rover,
     apod: manifest,
     rover_manifest: manifest,
-    rover_images: images
+    rover_images: images,
+    last_photo_taken: earth_date
   });
 }
 
@@ -222,4 +249,12 @@ const getRoverImages = async (rover_name, earth_date) => {
 *****************************************************************/
 const getLastPhotoTaken = (photos) => {
   return photos.splice([photos.length-1])[0].earth_date;
+}
+
+const renderListElements = (label, item) => {
+  return (`<li>${label}: ${item}</li>`);
+}
+
+const renderImageElements = (img_src) => {
+  return (`<div><img src="${img_src}" /></div>`);
 }
