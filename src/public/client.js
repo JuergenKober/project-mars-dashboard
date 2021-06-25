@@ -8,6 +8,7 @@ let storeIM = Immutable.Map({
     rover_manifest: '',
     rover_images: '',
     last_photo_taken: '',
+    recent_images: [],
 })
 
 function updateStoreIM(state, newState) {
@@ -68,7 +69,8 @@ const Main = (state, renderListElements, renderImageElements) => {
     active_rover,
     rover_manifest,
     rover_images,
-    last_photo_taken
+    last_photo_taken,
+    recent_images
   } = state.toJS();
 
   if (active_rover === '') {
@@ -95,19 +97,12 @@ const Main = (state, renderListElements, renderImageElements) => {
       const rover_data = rover_manifest.manifest.photo_manifest;
       const data_labels = ['Rover Name', 'Launch Date', 'Landing Date', 'Status', 'Date of most recent photos' ];
       const data_items = [rover_data.name, rover_data.launch_date, rover_data.landing_date, rover_data.status, last_photo_taken ]
-      const photos = rover_images.rover_photos.photos;
 
       //console.log('rover_manifest from main', rover_manifest);
-      console.log('rover_images from main', rover_images);
+      // console.log('recent_images from main', recent_images);
 
       const list_elements = data_labels.map((elem, i) => renderListElements(elem, data_items[i]));
-
-      // access each image element with rover_images.rover_photos.photos[i]
-      // image src: rover_images.rover_photos.photos[img_src]
-      console.log('rover_images.rover_photos.photos.length', rover_images.rover_photos.photos.length);
-      console.log('photos from main ', photos);
-
-      const image_elements = photos.map((elem, i) => renderImageElements(elem.img_src));
+      const image_elements = recent_images.map((elem, i) => renderImageElements(elem));
 
       return `
         <section>
@@ -215,12 +210,19 @@ const getRoverData = async (active_rover, state) => {
   const earth_date = getLastPhotoTaken(manifest.manifest.photo_manifest.photos);
   const images = await getRoverImages(active_rover, earth_date);
 
+  const photos = (images.rover_photos.photos.length > 6) ?
+    images.rover_photos.photos.slice(0,6) :
+    images.rover_photos.photos;
+
+  const recent_images = photos.map((elem, i) => elem.img_src);
+
   updateStoreIM(state, {
     active_rover: active_rover,
     apod: manifest,
     rover_manifest: manifest,
     rover_images: images,
-    last_photo_taken: earth_date
+    last_photo_taken: earth_date,
+    recent_images: recent_images
   });
 }
 
