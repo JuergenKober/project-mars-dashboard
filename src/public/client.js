@@ -25,6 +25,10 @@ root.addEventListener("click", function(e) {
     getRoverData(e.target.id, storeIM);
     //updateStoreIM(storeIM, {active_rover: e.target.id});
   }
+  else if (e.target && e.target.matches("div.rover_tile h5")) {
+    getRoverData(e.target.parentElement.id, storeIM);
+    //updateStoreIM(storeIM, {active_rover: e.target.parentElement.id});
+  }
   else if (e.target && e.target.matches("div.rover_tile img")) {
     getRoverData(e.target.parentElement.id, storeIM);
     //updateStoreIM(storeIM, {active_rover: e.target.parentElement.id});
@@ -124,12 +128,23 @@ const Header = (state) => {
   let rover_element = '';
 
   const rover_elements = rovers.map(item => {
-    return (`<div class="rover_tile" id="${item}">
-        <img src="assets/images/${item}.jpg" height="100">
-        ${item}
+    return (`<div class="rover_tile cell box-flex" id="${item}">
+        <img src="assets/images/${item}.jpg" class="responsive-image"
+        height="100" />
+        <h5 class="box-caption">${item}</h5>
       </div>`);
   });
-  return rover_elements.join('');
+  
+  return `
+    <section class="rover-area">
+      <div class="rover-img"></div>
+      <div class="container">
+        <div class="grid">
+          ${rover_elements.join('')}
+          </div>
+        </div>
+      </section>
+  `;
 }
 
 const Footer = () => {
