@@ -46,15 +46,9 @@ const App = (state, renderList, renderImage) => {
     renderList('Name', 'John');
 
     return `
-        <header>
-          ${Header(state)}
-        </header>
-        <main>
-           ${Main(state, renderList, renderImage)}
-        </main>
-        <footer>
-          ${Footer()}
-        </footer>
+        ${Header(state)}
+        ${Main(state, renderList, renderImage)}
+        ${Footer()}
     `
 }
 
@@ -78,46 +72,51 @@ const Main = (state, renderListElements, renderImageElements) => {
   } = state.toJS();
 
   if (active_rover === '') {
-    if (apod === '') {
-      getImageOfTheDay(state);
-    }
     return `
-      ${Greeting(user.name)}
-      <section>
-          <h3>Put things on the page!</h3>
-          <p>Here is an example section.</p>
-          <p>
-              One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
-              the most popular websites across all federal agencies. It has the popular appeal of a Justin Bieber video.
-              This endpoint structures the APOD imagery and associated metadata so that it can be repurposed for other
-              applications. In addition, if the concept_tags parameter is set to True, then keywords derived from the image
-              explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
-              but generally help with discoverability of relevant imagery.
-          </p>
-          ${ImageOfTheDay(state)}
+      <section class="manifest-area" id="manifest">
+        <h3 class="section-title">Welcome, connoisseur of the multiverse!</h3>
+        <p>The <a href="https://en.wikipedia.org/wiki/Mars_rover" target="_wikiWin">
+        Wikipedia Mars Rover page</a> tells us "a Mars rover is a motor vehicle
+        that travels across the surface of the planet Mars upon arrival. Rovers
+        have several advantages over stationary landers: they examine more territory,
+        they can be directed to interesting features, they can place themselves in
+        sunny positions to weather winter months, and they can advance the knowledge
+        of how to perform very remote robotic vehicle control."</p>
+        <p>&nbsp;</p>
+        <p>The NASA Open API is designed to collect image data gathered by NASA's
+        Curiosity, Opportunity, and Spirit rovers on Mars and make it more easily
+        available to other developers, educators, and citizen scientists. This
+        API is maintained by
+        <a href="https://github.com/chrisccerami/mars-photo-api" target="_gitWin">
+          Chris Cerami
+        </a>.</p>
+        <p>&nbsp;</p>
+        <p>Click on an image to learn more about a Rover's mission.</p>
       </section>
     `
   } else if (rover_manifest !== '') {
       const rover_data = rover_manifest.manifest.photo_manifest;
-      const data_labels = ['Rover Name', 'Launch Date', 'Landing Date', 'Status', 'Date of most recent photos' ];
-      const data_items = [rover_data.name, rover_data.launch_date, rover_data.landing_date, rover_data.status, last_photo_taken ]
-
-      //console.log('rover_manifest from main', rover_manifest);
-      // console.log('recent_images from main', recent_images);
+      const status = rover_data.status.charAt(0).toUpperCase() + rover_data.status.substring(1);
+      const data_labels = ['Launch Date', 'Landing Date', 'Status' ];
+      const data_items = [rover_data.launch_date, rover_data.landing_date, status ]
 
       const list_elements = data_labels.map((elem, i) => renderListElements(elem, data_items[i]));
       const image_elements = recent_images.map((elem, i) => renderImageElements(elem));
 
       return `
-        <section>
-            <h3>Data for ${active_rover}</h3>
-            <ul>
-              ${list_elements.join('')}
-            </ul>
-            <div>
-              <div>Most recent photos taken on ${last_photo_taken}</div>
-              <div>${image_elements.join('')}</div>
+        <section class="manifest-area" id="manifest">
+          <h3 class="section-title">Rover ${rover_data.name}</h3>
+          <ul class="manifest-content">
+            ${list_elements.join('')}
+          </ul>
+        </section>
+        <section class="images-area" id="images">
+          <h3 class="section-title">Most recent photos taken on ${last_photo_taken}</h3>
+          <div class="container">
+            <div class="grid">
+              ${image_elements.join('')}
             </div>
+          </div>
         </section>
       `
   }
@@ -129,13 +128,18 @@ const Header = (state) => {
 
   const rover_elements = rovers.map(item => {
     return (`<div class="rover_tile cell box-flex" id="${item}">
-        <img src="assets/images/${item}.jpg" class="responsive-image"
-        height="100" />
+        <img src="assets/images/${item}.jpg" class="responsive-image" />
         <h5 class="box-caption">${item}</h5>
       </div>`);
   });
-  
+
   return `
+    <header>
+      <h2>Mars Exploration Rovers</h2>
+      <nav>
+        <li>Click on an image to learn more</li>
+      </nav>
+    </header>
     <section class="rover-area">
       <div class="rover-img"></div>
       <div class="container">
@@ -149,7 +153,11 @@ const Header = (state) => {
 
 const Footer = () => {
   return `
-    <i>All data retrieved from the the NASA API portal. This website is one of the most popular websites across all federal agencies. The objective of this site is to make NASA data, including imagery, eminently accessible to application developers. The api.nasa.gov catalog is growing. The full documentation for this API can be found in the <a href="https://github.com/nasa/apod-api">APOD API Github repository</a></i>.
+    <footer>
+      <p>
+        All data retrieved from the the NASA API portal. This website is one of the most popular websites across all federal agencies. The objective of this site is to make NASA data, including imagery, eminently accessible to application developers. The api.nasa.gov catalog is growing. The full documentation for this API can be found in the <a href="https://github.com/nasa/apod-api">APOD API Github repository</a>.
+      </p>
+    </footer>
   `
 }
 
@@ -269,9 +277,15 @@ const getLastPhotoTaken = (photos) => {
 }
 
 const renderListElements = (label, item) => {
-  return (`<li>${label}: ${item}</li>`);
+  return (`
+    <li>
+      <p>${label}: ${item}</p>
+    </li>
+  `);
 }
 
 const renderImageElements = (img_src) => {
-  return (`<div><img src="${img_src}" /></div>`);
+  return (`<div class="cell box-flex">
+    <img src="${img_src}" class="responsive-image" />
+  </div>`);
 }
