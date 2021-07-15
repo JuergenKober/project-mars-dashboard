@@ -47,16 +47,20 @@ header nav {
   display: flex;
 }
 
-/* -------------------  MOBILE  --------------------- */
 .container {
   margin: 0 auto;
   max-width: 1200px;
   padding: 0 1rem;
 }
 
+.grid {
+  justify-content: center;
+}
+
 .responsive-image {
   max-width: 100%;
 }
+
 
 .cell {
   margin: 1rem;
@@ -202,23 +206,60 @@ footer p a {
   text-decoration: underline;
 }
 
+@media screen and (min-width: 768px) {
+  header h2 {
+    margin-bottom: 15px;
+  }
 
-/* -------------------  TABLET  --------------------- */
-@media screen and (min-width: 600px) {
   .grid {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
   }
+
   .cell {
-    background-color: yellow;
-    width: calc(50% - 2rem);
+    background-color: #333333;
+    width: calc(33.3333% - 2rem);
+  }
+
+  #images .cell {
+    background-color: #fff;
+    /*** width: calc(50% - 2rem); ***/
   }
 }
 
+@media(max-width:1000px) {
+  header {
+    padding: 20px 50px;
+    flex-direction: column;
+  }
+  section.rover-area {
+    padding: 200px 20px 50px 20px;
+  }
+  .cell {
+    margin-top: 1.5rem;
+  }
+  .box-flex, #images .container {
+    padding: 0;
+  }
+  #manifest {
+    padding: 50px 20px 60px 20px;
+  }
+  .manifest-content li {
+    padding: 5px 0;
+  }
+  ul.manifest-content {
+    display: block;
+  }
+}
 
 /* -------------------  DESKTOP  -------------------- */
 @media screen and (min-width: 1000px) {
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+  }
   .cell {
     background-color: #333333;
     width: calc(33.3333% - 2rem);
