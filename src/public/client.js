@@ -101,7 +101,7 @@ const Main = (state, renderListElements, renderImageElements) => {
       const data_items = [rover_data.launch_date, rover_data.landing_date, status ]
 
       const list_elements = data_labels.map((elem, i) => renderListElements(elem, data_items[i]));
-      const image_elements = recent_images.map((elem, i) => renderImageElements(elem));
+      const image_elements = recent_images.map((elem, i) => renderImageElements(elem, recent_images.length));
 
       return `
         <section class="manifest-area" id="manifest">
@@ -284,8 +284,9 @@ const renderListElements = (label, item) => {
   `);
 }
 
-const renderImageElements = (img_src) => {
-  return (`<div class="cell box-flex">
+const renderImageElements = (img_src, num_elem) => {
+  const res_img = (num_elem < 3) ? ' res_img' : '';
+  return (`<div class="cell box-flex${res_img}">
     <img src="${img_src}" class="responsive-image" />
   </div>`);
 }

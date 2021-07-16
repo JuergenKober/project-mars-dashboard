@@ -224,8 +224,13 @@ footer p a {
 
   #images .cell {
     background-color: #fff;
-    /*** width: calc(50% - 2rem); ***/
   }
+
+  #images .grid .res_img {
+    width: calc(50% - 2rem);
+    background-color: #fff;
+  }
+
 }
 
 @media(max-width:1000px) {
