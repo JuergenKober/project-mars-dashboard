@@ -229,7 +229,6 @@ const getImageOfTheDay = (state) => {
 *****************************************************************/
 const getRoverData = async (active_rover, state) => {
   const manifest = await getRoverManifestData(active_rover);
-  console.log('manifest 2', manifest);
   const earth_date = getLastPhotoTaken(manifest.manifest.photo_manifest.photos);
   const images = await getRoverImages(active_rover, earth_date);
 
@@ -255,7 +254,6 @@ const getRoverData = async (active_rover, state) => {
 const getRoverManifestData = async (active_rover) => {
     const response = await fetch(`http://localhost:3000/manifest/${active_rover}`, {});
     const manifest = await response.json();
-    console.log('manifest 1', manifest);
     return manifest;
 }
 
@@ -265,7 +263,6 @@ const getRoverManifestData = async (active_rover) => {
 const getRoverImages = async (rover_name, earth_date) => {
   const response = await fetch(`http://localhost:3000/rover_photos/${rover_name}/${earth_date}`, {});
   const images = await response.json();
-  console.log('images 1', images);
   return images;
 }
 
