@@ -1,10 +1,12 @@
-# Functional Programming with Javascript 
+# Functional Programming with Javascript
+
+## Part of the Intermediate Javascript Nanodegree from Udacity
 
 ## Student Instructions
 
 ### Big Picture
 
-You are going to create a Mars rover dashboard that consumes the NASA API. Your dashboard will allow the user to select which rover's information they want to view. Once they have selected a rover, they will be able to see the most recent images taken by that rover, as well as important information about the rover and its mission. Your app will make use of all the functional concepts and practices you have learned in this course, and the goal is that you would become very comfortable using pure functions and iterating over, reshaping, and accessing information from complex API responses. 
+You are going to create a Mars rover dashboard that consumes the NASA API. Your dashboard will allow the user to select which rover's information they want to view. Once they have selected a rover, they will be able to see the most recent images taken by that rover, as well as important information about the rover and its mission. Your app will make use of all the functional concepts and practices you have learned in this course, and the goal is that you would become very comfortable using pure functions and iterating over, reshaping, and accessing information from complex API responses.
 
 ### Getting Started
 
@@ -18,7 +20,7 @@ We have supplied some of the foundational code for you. So follow these steps to
 
  - [ ] For this project we are using yarn as our package manager, so to install your depencies run:
 
-```yarn install``` 
+```yarn install```
 
 **If you don’t have yarn installed globally, follow their installation documentation here according to your operating system: https://yarnpkg.com/lang/en/docs/install
 
@@ -41,7 +43,7 @@ To complete this project, your UI must show the following:
 To complete this project, your UI must do the following:
 
 - [ ] Be responsive. Needs to look good(aka not broken) on phones(max width 768px) and desktop(min-width 991px, max-width 1824px). Tablet view is optional.
-- [ ] Provide a way to dynamically switch the UI to view one of the three rovers 
+- [ ] Provide a way to dynamically switch the UI to view one of the three rovers
 **This can be done using tabs, buttons, or any other UI control
 
 To complete this project, your frontend code must:
@@ -66,7 +68,4 @@ Some ideas might be to incorporate the Astronomy Photo of the Day into your desi
 
 ### Design
 
-Create an image gallery slider, put a full page background image, code some falling asteroids with css animations ... the visual design of this UI is up to you! There is a lot of awesome dashboard design inspiration out there. You have already been given a good start with a mobile-first stylesheet already set up for you. 
-
-
-
+Create an image gallery slider, put a full page background image, code some falling asteroids with css animations ... the visual design of this UI is up to you! There is a lot of awesome dashboard design inspiration out there. You have already been given a good start with a mobile-first stylesheet already set up for you.
